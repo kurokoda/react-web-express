@@ -1,11 +1,12 @@
 const bodyParser   = require('body-parser');
+const config       = require('./config');
 const cookieParser = require('cookie-parser');
 const express      = require('express');
-const session      = require('express-session');
-const mongoose     = require('mongoose');
 const logger       = require('morgan');
+const mongoose     = require('mongoose');
 const path         = require('path');
-const config       = require('./config');
+const session      = require('express-session');
+const userRouter   = require('./routes/user');
 
 const app = express();
 
@@ -30,7 +31,7 @@ app.set('view engine', 'jade');
 // Use ----------------------------------------------------------------------
 
 app.use(logger('dev'));
-app.use(express.static(path.join(__dirname, '..', 'frontend/build/static')));
+// app.use(express.static(path.join(__dirname, '..', 'frontend/build/static'))); For certificates
 app.use(express.static(path.join(__dirname, '..', 'frontend/build')));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
@@ -47,20 +48,7 @@ app.get('/api/hello', (req, res) => {
   res.send({express: 'Die From Express'});
 });
 
-app.post('/api/user/signup', (req, res, next) => {
-  const controller = require('./controllers/user');
-  controller.signup(req, res, next);
-});
-
-app.post('/api/user/login', (req, res, next) => {
-  const controller = require('./controllers/user');
-  controller.login(req, res, next);
-});
-
-app.post('/api/user/logout', (req, res) => {
-  const controller = require('./controllers/user');
-  controller.logout(req, res);
-});
+app.use(userRouter);
 
 // Error Handling ----------------------------------------------------------------------
 
