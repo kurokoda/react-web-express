@@ -1,7 +1,6 @@
 const express    = require('express');
 const controller = require('../controllers/user');
-
-const router = express.Router();
+const router     = express.Router();
 
 router.post('/api/user/signup', (req, res) => {
   controller.signup(req, res);

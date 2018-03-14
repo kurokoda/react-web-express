@@ -1,12 +1,17 @@
-const bodyParser   = require('body-parser');
-const config       = require('./config');
-const cookieParser = require('cookie-parser');
-const express      = require('express');
-const logger       = require('morgan');
-const mongoose     = require('mongoose');
-const path         = require('path');
-const session      = require('express-session');
-const userRouter   = require('./routes/user');
+const bodyParser     = require('body-parser');
+const config         = require('./config');
+const cookieParser   = require('cookie-parser');
+const express        = require('express');
+const logger         = require('morgan');
+const mongoose       = require('mongoose');
+const path           = require('path');
+const session        = require('express-session');
+const questionRouter = require('./routes/user');
+const userRouter     = require('./routes/user');
+const screenRouter   = require('./routes/screen');
+const facilityRouter = require('./routes/facility');
+const detaineeRouter = require('./routes/detainee');
+
 
 const app = express();
 
@@ -20,6 +25,8 @@ if (config.MONGO_URI) {
   database.on('error', console.error.bind(console, 'connection error:'));
   database.once('open', function () {
     console.log('mongo database connected');
+    const detaineeController = require('./controllers/detainee');
+    detaineeController.seed()
   });
 }
 
@@ -44,16 +51,17 @@ app.use(session({
 
 // Routing ----------------------------------------------------------------------
 
-app.get('/api/hello', (req, res) => {
-  res.send({express: 'Die From Express'});
-});
-
+app.use(questionRouter);
 app.use(userRouter);
+app.use(screenRouter);
+app.use(facilityRouter);
+app.use(detaineeRouter);
+
 
 // Error Handling ----------------------------------------------------------------------
 
 app.use(function (req, res, next) {
-  var err    = new Error('Not Found');
+  var err    = new Error('Not Found'); // fix
   err.status = 404;
   next(err);
 });

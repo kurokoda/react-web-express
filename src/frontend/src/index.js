@@ -5,7 +5,7 @@ import {BrowserRouter as Router} from 'react-router-dom';
 import {PersistGate} from 'redux-persist/es/integration/react';
 import Routes from './_web/routes';
 import HeaderFooterContainer from './_web/views/layout/container/HeaderFooterContainer';
-import DevTools from './shared/components/devTools';
+// import DevTools from './shared/components/devTools';
 import Loading from './shared/components/Loading';
 import configureStore from './shared/store';
 
